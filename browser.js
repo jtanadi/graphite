@@ -79,13 +79,13 @@ const line = (args) => {
 
 const arc = (args) => {
   if (args.length !== 3) {
-    return logError("arc requires 3 arguments: direction x y");
+    return logError("arc requires 3 arguments: x y direction");
   }
 
   const [x1, y1] = POINT;
 
-  const [direction, ...coords] = args;
-  const [x, y] = parseCoords(coords);
+  const [xStr, yStr, direction] = args;
+  const [x, y] = parseCoords([xStr, yStr]);
   const [x2, y2] = [x1 + x, y1 + y];
   POINT = [x2, y2];
 
