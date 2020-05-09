@@ -1,11 +1,14 @@
 * {
   box-sizing: border-box;
+  font-size: 0.875rem;
+  font-family: "SFMono-Regular", monospace;
 }
 
 body {
   margin: 0;
   background-color: black;
   overflow: hidden;
+  -webkit-app-region: drag;
 }
 
 .dot {
@@ -48,7 +51,7 @@ body {
   position: absolute;
   z-index: 9999;
 
-  /* Shift canvas to match grid */ 
+  /* Shift canvas to match grid */
   top: -4px;
   left: -4px;
 }
@@ -74,14 +77,14 @@ textarea {
   background-color: black;
   color: white;
   resize: none;
-  font-family: monospace;
   position: relative;
+  -webkit-app-region: no-drag;
 }
 
 textarea:focus {
   border: none;
   box-shadow: none;
-  resize: none; 
+  resize: none;
   outline: none;
 }
 
@@ -95,14 +98,14 @@ textarea:focus {
 
 #button-area {
   height: 2rem;
-  margin-top: 12px;
-  margin-bottom: 14px;
+  margin-top: 14px;
+  margin-bottom: 17px;
   position: relative;
   display: flex;
 }
 
 #button-area .dot.mid {
-  top: calc(1rem - 2px);
+  top: calc(1rem - 1px);
 }
 
 .button-container {
@@ -116,8 +119,9 @@ button {
   height: 2rem;
   color: white;
   background-color: black;
-  font-family: monospace;
   transition: all ease 0.25s;
+  -webkit-app-region: no-drag;
+  -webkit-user-select: none;
 }
 
 
