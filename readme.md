@@ -49,3 +49,9 @@ arc 5 -3 s
 ```
 
 ![arc screenshot](./docs/screenshot-arc.png)
+
+
+### `nocursor`
+The `nocursor` command turns off the red cursor and takes no argument.
+
+![nocursor screenshot](./docs/screenshot-nocursor.png)
