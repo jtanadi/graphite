@@ -203,7 +203,7 @@ const runCode = () => {
   parseAndExec(codeToRun);
 };
 
-const initialize = () => {
+const startDwg = () => {
   clear();
   drawCursor();
 };
@@ -211,9 +211,8 @@ const initialize = () => {
 generateGrids(NUM_GRIDS);
 
 codeArea.focus();
-
 runBtn.addEventListener("click", runCode);
-clearBtn.addEventListener("click", initialize);
+clearBtn.addEventListener("click", startDwg);
 
 window.addEventListener("keypress", (ev) => {
   if (ev.charCode === 10) {
@@ -221,8 +220,8 @@ window.addEventListener("keypress", (ev) => {
     runCode();
   } else if (ev.charCode === 3) {
     // ctrl + shift + c
-    initialize();
+    startDwg();
   }
 });
 
-initialize();
+startDwg();
