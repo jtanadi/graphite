@@ -2,7 +2,11 @@ const NUM_GRIDS = 16;
 const GRID_SIZE = 31;
 const CANVAS_SIZE = 504;
 
-let POINT = [0, 0];
+const START = {
+  x: 0,
+  y: 496,
+};
+let POINT = [START.x, START.y];
 let SHOW_CURSOR = true;
 
 const runBtn = document.getElementById("run");
@@ -38,8 +42,11 @@ const generateGrids = (size) => {
   }
 };
 
-const parseCoords = (arr) => {
-  return arr.map((val) => parseInt(val) * GRID_SIZE);
+const parseCoords = (coords) => {
+  const [x, y] = coords.map((coord) => parseInt(coord) * GRID_SIZE);
+
+  // Flip y-axis so canvas works more like a graph
+  return [x, -y];
 };
 
 const move = (args) => {
@@ -145,7 +152,7 @@ const logError = (message) => {
 };
 
 const clear = () => {
-  POINT = [0, 0];
+  POINT = [START.x, START.y];
   SHOW_CURSOR = true;
 
   clearLog();
@@ -196,13 +203,26 @@ const runCode = () => {
   parseAndExec(codeToRun);
 };
 
+const initialize = () => {
+  clear();
+  drawCursor();
+};
+
 generateGrids(NUM_GRIDS);
 
 codeArea.focus();
+
 runBtn.addEventListener("click", runCode);
-clearBtn.addEventListener("click", () => {
-  clear();
-  drawCursor();
+clearBtn.addEventListener("click", initialize);
+
+window.addEventListener("keypress", (ev) => {
+  if (ev.charCode === 10) {
+    // ctrl + enter
+    runCode();
+  } else if (ev.charCode === 3) {
+    // ctrl + shift + c
+    initialize();
+  }
 });
 
-drawCursor();
+initialize();
