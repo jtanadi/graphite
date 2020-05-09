@@ -1,12 +1,20 @@
 const NUM_GRIDS = 16;
 const GRID_SIZE = 31;
+const CANVAS_SIZE = 504;
+
+let POINT = [0, 0];
+let SHOW_CURSOR = true;
 
 const runBtn = document.getElementById("run");
-const codeArea = document.getElementById("code-input");
+const clearBtn = document.getElementById("clear");
+const codeArea = document.getElementById("code-area");
+const outputArea = document.getElementById("output-area");
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
-ctx.translate(0.5, 0.5);
+
+// Shift canvas so lines along edges don't get cut off
+ctx.translate(4, 4);
 
 const generateGrids = (size) => {
   const leftContainer = document.getElementById("left-container");
@@ -35,36 +43,152 @@ const parseCoords = (arr) => {
 };
 
 const move = (args) => {
-  const [x, y] = parseCoords(args);
+  if (args.length !== 2) {
+    return logError("move requires 2 arguments: x y");
+  }
+
+  const [x1, y1] = POINT;
+  const [x2, y2] = parseCoords(args);
+
+  const [x, y] = [x1 + x2, y1 + y2];
+  POINT = [x, y];
+
   ctx.moveTo(x, y);
 };
 
 const line = (args) => {
-  const [x, y] = parseCoords(args);
+  if (args.length !== 2) {
+    return logError("line requires 2 arguments: x y");
+  }
+
+  const [x1, y1] = POINT;
+  const [x2, y2] = parseCoords(args);
+
+  const [x, y] = [x1 + x2, y1 + y2];
+  POINT = [x, y];
 
   ctx.lineTo(x, y);
 };
 
-const parseAndExec = (text) => {
-  const textLines = text.split("\n");
+const arc = (args) => {
+  if (args.length !== 3) {
+    return logError("arc requires 3 arguments: direction x y");
+  }
 
-  ctx.clearRect(0, 0, 496, 496);
+  const [x1, y1] = POINT;
+
+  const [direction, ...coords] = args;
+  const [x, y] = parseCoords(coords);
+  const [x2, y2] = [x1 + x, y1 + y];
+  POINT = [x2, y2];
+
+  const xRadius = Math.abs(x2 - x1);
+  const yRadius = Math.abs(y2 - y1);
+
+  // Default to a line if we can't make an arc
+  if (!xRadius || !yRadius) {
+    return ctx.lineTo(x2, y2);
+  }
+
+  if (direction === "n") {
+    if (x2 > x1 && y2 < y1) {
+      ctx.ellipse(x2, y1, xRadius, yRadius, 0, -Math.PI, -Math.PI / 2);
+    } else if (x2 > x1 && y2 > y1) {
+      ctx.ellipse(x1, y2, xRadius, yRadius, 0, -Math.PI / 2, 0);
+    } else if (x2 < x1 && y2 < y1) {
+      ctx.ellipse(x2, y1, xRadius, yRadius, 0, 0, -Math.PI / 2, true);
+    } else {
+      ctx.ellipse(x1, y2, xRadius, yRadius, 0, -Math.PI / 2, -Math.PI, true);
+    }
+  } else if (direction === "s") {
+    if (x2 > x1 && y2 < y1) {
+      ctx.ellipse(x1, y2, xRadius, yRadius, 0, Math.PI / 2, 0, true);
+    } else if (x2 > x1 && y2 > y1) {
+      ctx.ellipse(x2, y1, xRadius, yRadius, 0, -Math.PI, Math.PI / 2, true);
+    } else if (x2 < x1 && y2 < y1) {
+      ctx.ellipse(x1, y2, xRadius, yRadius, 0, Math.PI / 2, -Math.PI);
+    } else {
+      ctx.ellipse(x2, y1, xRadius, yRadius, 0, 0, Math.PI / 2);
+    }
+  } else {
+    return logError(`${direction} is an invalid direction`);
+  }
+};
+
+const drawCursor = () => {
+  const [x, y] = POINT;
+
   ctx.beginPath();
 
-  textLines.forEach((textLine) => {
-    const [funcName, ...funcArgs] = textLine.split(" ");
-    switch (funcName) {
-      case "move":
-        move(funcArgs);
-        break;
-      case "line":
-        line(funcArgs);
-        break;
-    }
-  });
+  // Horizontal
+  ctx.moveTo(x - 4, y);
+  ctx.lineTo(x + 4, y);
+
+  // Vertical
+  ctx.moveTo(x, y - 4);
+  ctx.lineTo(x, y + 4);
+
+  // Reset
+  ctx.moveTo(x, y);
+
+  ctx.strokeStyle = "red";
+  ctx.lineWidth = 2;
+  ctx.stroke();
+};
+
+const clearLog = () => {
+  outputArea.value = "";
+};
+
+const logError = (message) => {
+  outputArea.value = message;
+};
+
+const clear = () => {
+  POINT = [0, 0];
+  SHOW_CURSOR = true;
+
+  clearLog();
+  ctx.clearRect(-4, -4, CANVAS_SIZE, CANVAS_SIZE);
+};
+
+const parseAndExec = (text) => {
+  clear();
+
+  const [x, y] = POINT;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+
+  text
+    .split("\n")
+    .filter((textLine) => textLine)
+    .forEach((textLine) => {
+      const [funcName, ...funcArgs] = textLine.split(" ");
+      switch (funcName) {
+        case "nocursor":
+          SHOW_CURSOR = false;
+          break;
+        case "move":
+          move(funcArgs);
+          break;
+        case "line":
+          line(funcArgs);
+          break;
+        case "arc":
+          arc(funcArgs);
+          break;
+        default:
+          logError(`${funcName} is not a valid function.`);
+      }
+    });
 
   ctx.strokeStyle = "white";
+  ctx.lineWidth = 2;
   ctx.stroke();
+
+  if (SHOW_CURSOR) {
+    drawCursor();
+  }
 };
 
 const runCode = () => {
@@ -73,4 +197,12 @@ const runCode = () => {
 };
 
 generateGrids(NUM_GRIDS);
+
+codeArea.focus();
 runBtn.addEventListener("click", runCode);
+clearBtn.addEventListener("click", () => {
+  clear();
+  drawCursor();
+});
+
+drawCursor();

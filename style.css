@@ -5,6 +5,7 @@
 body {
   margin: 0;
   background-color: black;
+  overflow: hidden;
 }
 
 .dot {
@@ -12,6 +13,7 @@ body {
   height: 2px;
   background-color: white;
   position: absolute;
+  z-index: 99;
 }
 
 .dot.top {
@@ -44,7 +46,11 @@ body {
 
 #left-container canvas {
   position: absolute;
-  z-index: -2;
+  z-index: 9999;
+
+  /* Shift canvas to match grid */ 
+  top: -4px;
+  left: -4px;
 }
 
 #right-container {
@@ -92,13 +98,19 @@ textarea:focus {
   margin-top: 12px;
   margin-bottom: 14px;
   position: relative;
+  display: flex;
 }
 
 #button-area .dot.mid {
   top: calc(1rem - 2px);
 }
 
-button#run {
+.button-container {
+  flex: 1;
+  position: relative;
+}
+
+button {
   border: none;
   width: 100%;
   height: 2rem;
@@ -108,17 +120,18 @@ button#run {
   transition: all ease 0.25s;
 }
 
-button#run:focus {
+
+button:focus {
   outline: none;
   box-shadow: none;
 }
 
-button#run:hover {
+button:hover {
   color: black;
   background-color: white;
 }
 
-button#run:active {
+button:active {
   color: white;
   background-color: black;
 }

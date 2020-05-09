@@ -14,12 +14,17 @@
         <div class="dot top right"></div>
         <div class="dot bottom left"></div>
         <div class="dot bottom right"></div>
-        <canvas width="496" height="496"></canvas>
+
+        <!--
+          Canvas is wider and taller than container
+          so lines along edges don't get cut off
+        --> 
+        <canvas width="504" height="504"></canvas>
       </div>
 
       <div id="right-container">
         <div class="textarea" id="code">
-          <textarea id="code-input"></textarea>
+          <textarea id="code-area"></textarea>
           <div class="dot top left"></div>
           <div class="dot top right"></div>
           <div class="dot bottom left"></div>
@@ -29,11 +34,18 @@
         <div id="button-area">
           <div class="dot mid left"></div>
           <div class="dot mid right"></div>
-          <button id="run">Run</button>
+
+          <div class="button-container">
+            <div class="dot mid right"></div>
+            <button id="run">Run</button>
+          </div>
+          <div class="button-container">
+            <button id="clear">Clear</button>
+          </div>
         </div>
 
         <div class="textarea" id="output">
-          <textarea readonly></textarea>
+          <textarea readonly id="output-area"></textarea>
           <div class="dot top left"></div>
           <div class="dot top right"></div>
           <div class="dot bottom left"></div>

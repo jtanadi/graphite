@@ -4,7 +4,12 @@ const path = require("path");
 const { app, BrowserWindow } = electron;
 
 app.on("ready", () => {
-  const mainWindow = new BrowserWindow({ width: 800, height: 560 });
+  const windowOption = { width: 800, height: 550 };
+  if (process.env.NODE_ENV !== "PRODUCTION" && process.platform !== "darwin") {
+    windowOption.height = 575;
+  }
+
+  const mainWindow = new BrowserWindow(windowOption);
 
   if (process.env.NODE_ENV === "PRODUCTION") {
     mainWindow.setMenu(null);
