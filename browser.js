@@ -215,6 +215,8 @@ runBtn.addEventListener("click", runCode);
 clearBtn.addEventListener("click", startDwg);
 
 window.addEventListener("keypress", (ev) => {
+  // Keys only really work on non-mac
+  // Probably best to let electron deal with this
   if (ev.charCode === 10) {
     // ctrl + enter
     runCode();
