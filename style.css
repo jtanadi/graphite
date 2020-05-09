@@ -1,0 +1,136 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: black;
+}
+
+.dot {
+  width: 2px;
+  height: 2px;
+  background-color: white;
+  position: absolute;
+}
+
+.dot.top {
+  top: -1px;
+}
+
+.dot.left {
+  left: -1px;
+}
+
+.dot.right {
+  right: -1px;
+}
+
+.dot.bottom {
+  bottom: -1px;
+}
+
+#container {
+  padding: 27px;
+  display: flex;
+}
+
+#left-container {
+  width: 496px;
+  height: 496px;
+  margin-right: 24px;
+  position: relative;
+}
+
+#left-container canvas {
+  position: absolute;
+  z-index: -2;
+}
+
+#right-container {
+  width: 226px;
+  height: 496px;
+  background-color: black;
+}
+
+.textarea {
+  width: 226px;
+  display:inline-block;
+  margin: 0;
+  position: relative;
+}
+
+textarea {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 8px;
+  background-color: black;
+  color: white;
+  resize: none;
+  font-family: monospace;
+  position: relative;
+}
+
+textarea:focus {
+  border: none;
+  box-shadow: none;
+  resize: none; 
+  outline: none;
+}
+
+.textarea#code {
+  height: 279px;
+}
+
+.textarea#output {
+  height: 155px;
+}
+
+#button-area {
+  height: 2rem;
+  margin-top: 12px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+#button-area .dot.mid {
+  top: calc(1rem - 2px);
+}
+
+button#run {
+  border: none;
+  width: 100%;
+  height: 2rem;
+  color: white;
+  background-color: black;
+  font-family: monospace;
+  transition: all ease 0.25s;
+}
+
+button#run:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+button#run:hover {
+  color: black;
+  background-color: white;
+}
+
+button#run:active {
+  color: white;
+  background-color: black;
+}
+
+.row {
+  height: 31px;
+}
+
+.cell {
+  width: 31px;
+  height: 31px;
+  display: inline-block;
+  position: relative;
+  margin: 0;
+}
