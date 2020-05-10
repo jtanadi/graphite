@@ -57,6 +57,12 @@ const move = (args) => {
   const [x1, y1] = POINT;
   const [x2, y2] = parseCoords(args);
 
+  if (Number.isNaN(x2) || Number.isNaN(y2)) {
+    return logError(
+      "move's arguments should have the following types: number number"
+    );
+  }
+
   const [x, y] = [x1 + x2, y1 + y2];
   POINT = [x, y];
 
@@ -71,6 +77,12 @@ const line = (args) => {
   const [x1, y1] = POINT;
   const [x2, y2] = parseCoords(args);
 
+  if (Number.isNaN(x2) || Number.isNaN(y2)) {
+    return logError(
+      "line's arguments should have the following types: number number"
+    );
+  }
+
   const [x, y] = [x1 + x2, y1 + y2];
   POINT = [x, y];
 
@@ -82,10 +94,22 @@ const arc = (args) => {
     return logError("arc requires 3 arguments: x y direction");
   }
 
-  const [x1, y1] = POINT;
+  if (typeof args[2] !== "string") {
+    return logError(
+      "arc's arguments should have the following types: number number string"
+    );
+  }
 
+  const [x1, y1] = POINT;
   const [xStr, yStr, direction] = args;
   const [x, y] = parseCoords([xStr, yStr]);
+
+  if (Number.isNaN(x) || Number.isNaN(y)) {
+    return logError(
+      "arc's arguments should have the following types: number number string"
+    );
+  }
+
   const [x2, y2] = [x1 + x, y1 + y];
   POINT = [x2, y2];
 
