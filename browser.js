@@ -8,6 +8,7 @@ const START = {
 };
 let POINT = [START.x, START.y];
 let SHOW_CURSOR = true;
+let SHOW_GRID = true;
 
 const runBtn = document.getElementById("run");
 const clearBtn = document.getElementById("clear");
@@ -41,6 +42,13 @@ const generateGrids = (size) => {
     }
   }
 };
+
+const clearGrid = () => {
+  const gridRows = document.querySelectorAll(".row")
+  gridRows.forEach(row => {
+    row.parentNode.removeChild(row)
+  })
+}
 
 const parseCoords = (coords) => {
   const [x, y] = coords.map((coord) => parseInt(coord) * GRID_SIZE);
@@ -178,6 +186,7 @@ const logError = (message) => {
 const clear = () => {
   POINT = [START.x, START.y];
   SHOW_CURSOR = true;
+  SHOW_GRID = true;
 
   clearLog();
   ctx.clearRect(-4, -4, CANVAS_SIZE, CANVAS_SIZE);
@@ -198,6 +207,9 @@ const parseAndExec = (text) => {
       switch (funcName) {
         case "nocursor":
           SHOW_CURSOR = false;
+          break;
+        case "nogrid":
+          SHOW_GRID = false;
           break;
         case "move":
           move(funcArgs);
@@ -220,6 +232,13 @@ const parseAndExec = (text) => {
   if (SHOW_CURSOR) {
     drawCursor();
   }
+
+  if (!SHOW_GRID) {
+    clearGrid();
+  } else if (SHOW_GRID && !document.querySelectorAll(".row")){
+    // Only regenerate if grid doesn't exist
+    generateGrids(NUM_GRIDS);
+  }
 };
 
 const runCode = () => {
@@ -230,9 +249,8 @@ const runCode = () => {
 const startDwg = () => {
   clear();
   drawCursor();
+  generateGrids(NUM_GRIDS);
 };
-
-generateGrids(NUM_GRIDS);
 
 codeArea.focus();
 runBtn.addEventListener("click", runCode);
